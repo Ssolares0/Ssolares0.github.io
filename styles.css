@@ -429,9 +429,69 @@ main {
 
 .tech-tag:hover {
   border-color: var(--accent-color);
-  background: rgba(96, 165, 250, 0.1);
+  background: rgba(205, 210, 216, 0.1);
   color: var(--accent-color);
   box-shadow: var(--glow-blue);
+}
+
+/* Certifications Section */
+#certificaciones {
+  padding: 4rem 0;
+  margin: 2rem 0;
+}
+
+.certifications-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.certification-card {
+  background: rgba(255, 255, 255, 0.61);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid var(--accent-color);
+  box-shadow: var(--shadow), var(--glow-blue);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 230px;
+  min-height: 380px;
+}
+
+.certification-card iframe {
+  border: none !important;
+}
+
+.certification-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    var(--accent-color),
+    var(--accent-purple),
+    var(--accent-gold)
+  );
+  background-size: 200% 100%;
+  animation: galaxyFlow 3s ease infinite;
+  border-radius: 16px 16px 0 0;
+}
+
+.certification-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-hover), 0 0 30px rgba(96, 165, 250, 0.5);
+  border-color: var(--accent-purple);
 }
 
 /* About Section */
@@ -561,6 +621,16 @@ footer {
   .about-section {
     padding: 2rem;
     margin: 2rem 0;
+  }
+
+  .certifications-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .certification-card {
+    width: 100%;
+    max-width: 300px;
   }
   
   .footer-links {
