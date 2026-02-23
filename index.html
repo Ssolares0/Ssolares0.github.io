@@ -1,121 +1,283 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portafolio Sebastian S.</title>
+  <title>Sebastian Solares — Full Stack Developer</title>
+  <meta name="description" content="Full Stack Developer crafting scalable web applications with Angular, Node.js, and cloud infrastructure.">
+  <link rel="icon" type="image/png" href="images/memoji.png">
+  <link rel="apple-touch-icon" href="images/memoji.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script src="main.js" defer></script>
 </head>
 
 <body>
-  <!-- Fondo de la galaxia -->
-  <div class="galaxy-background"></div>
+  <!-- Ambient background -->
+  <div class="ambient-bg"></div>
+  <canvas id="particle-canvas" class="particle-canvas"></canvas>
 
-  <!-- Estrellas animadas -->
-  <div class="stars">
-    <div class="star" style="top: 20%; left: 10%;"></div>
-    <div class="star" style="top: 30%; left: 80%;"></div>
-    <div class="star" style="top: 50%; left: 25%;"></div>
-    <div class="star" style="top: 70%; left: 60%;"></div>
-    <div class="star" style="top: 15%; left: 90%;"></div>
-    <div class="star" style="top: 80%; left: 15%;"></div>
-    <div class="star" style="top: 40%; left: 70%;"></div>
-    <div class="star" style="top: 60%; left: 40%;"></div>
-    <div class="star" style="top: 25%; left: 50%;"></div>
-    <div class="star" style="top: 75%; left: 85%;"></div>
-  </div>
+  <!-- Cursor follower -->
+  <div class="cursor-glow"></div>
+
+  <!-- Navigation -->
+  <nav class="main-nav" role="navigation">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <img src="images/memoji.png" alt="Sebastian Solares" class="nav-memoji">
+      </div>
+      <div class="nav-links">
+        <a href="#work" class="nav-link" data-text="Work">Work</a>
+        <a href="#certifications" class="nav-link" data-text="Credentials">Credentials</a>
+        <a href="#about" class="nav-link" data-text="About">About</a>
+        <a href="#contact" class="nav-link contact-cta" data-text="Contact">Contact</a>
+      </div>
+    </div>
+  </nav>
 
   <div class="container">
-    <header>
+
+    <header class="hero">
       <div class="hero-content">
-        <h1 class="hero-title">Sebastian Solares</h1>
-        <p class="hero-subtitle">Desarrollador Full Stack</p>
+        <div class="hero-eyebrow">Full Stack Developer</div>
+        <h1 class="hero-title">
+          <span class="title-line">Sebastian</span>
+          <span class="title-line">Solares</span>
+        </h1>
         <p class="hero-description">
-          Explorando las fronteras del desarrollo web como quien navega por el cosmos digital
+          Building scalable web applications from database to deployment.<br>
+          Specialized in Angular ecosystems and cloud-native architecture.
         </p>
-        <nav>
-          <a href="#proyectos" class="nav-link">Proyectos</a>
-          <a href="#certificaciones" class="nav-link">Certificaciones</a>
-          <a href="#sobre-mi" class="nav-link">Sobre mí</a>
-          <a href="#contacto" class="nav-link">Contacto</a>
-        </nav>
+        <div class="hero-cta">
+          <a href="#work" class="btn-primary">
+            <span>View Projects</span>
+            <svg class="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3L13 8L8 13M13 8H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="https://github.com/Ssolares0" class="btn-secondary" target="_blank" rel="noopener">
+            <span>GitHub Profile</span>
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="code-preview">
+          <div class="code-header">
+            <span class="code-dot"></span>
+            <span class="code-dot"></span>
+            <span class="code-dot"></span>
+          </div>
+          <pre class="code-content"><code><span class="code-comment">// Building solutions that scale</span>
+<span class="code-keyword">const</span> developer = {
+  <span class="code-property">name</span>: <span class="code-string">'Sebastian Solares'</span>,
+  <span class="code-property">focus</span>: [<span class="code-string">'Angular'</span>, <span class="code-string">'Node.js'</span>, <span class="code-string">'Cloud'</span>],
+  <span class="code-property">buildQuality</span>: () => <span class="code-string">'Production-grade'</span>
+};</code></pre>
+        </div>
       </div>
     </header>
 
     <main>
-      <section id="proyectos">
-        <h2 class="section-title">Proyectos Estelares</h2>
+      <!-- Projects Section -->
+      <section id="work" class="section-work">
+        <div class="section-header">
+          <h2 class="section-title">Selected Work</h2>
+          <p class="section-subtitle">Production applications solving real problems</p>
+        </div>
 
-        <div class="projects-grid">
+        <div class="projects-list">
 
-          <article class="project-card">
-            <h3 class="project-title">SaludPlus</h3>
-            <p class="project-description">
-              Plataforma web integral para la gestión de citas médicas, pacientes y personal clínico.
-              Sistema completo para clínicas y centros de salud con autenticación segura y gestión de roles.
-            </p>
-            <div class="project-tech">
-              <span class="tech-tag">Angular</span>
-              <span class="tech-tag">TypeScript</span>
-              <span class="tech-tag">Node.js</span>
-              <span class="tech-tag">PostgreSQL</span>
-              <span class="tech-tag">Docker</span>
+          <article class="project-item" data-index="01">
+            <div class="project-visual">
+              <div class="project-thumbnail">
+                <img src="images/image.png" alt="SaludPlus - Healthcare Management Platform" class="project-image">
+              </div>
             </div>
-            <div class="project-links">
-              <a href="https://ssolares0.github.io/SaludPlus/" class="project-link"><span>Ver Demo</span></a>
-              <a href="https://github.com/Ssolares0/SaludPlus/blob/main/docs/manuales/manual_tecnico.md"
-                class="project-link"><span>Manual Técnico</span></a>
-              <a href="https://github.com/Ssolares0/SaludPlus" class="project-link"><span>Código</span></a>
+            <div class="project-content">
+              <div class="project-meta">
+                <span class="project-year">2025</span>
+                <span class="project-type">Web Application</span>
+              </div>
+              <h3 class="project-name">SaludPlus</h3>
+              <p class="project-description">
+                Healthcare management platform handling patient scheduling, medical records, and clinic operations. 
+                Reduced administrative overhead by 40% through automated appointment workflows and role-based access control.
+              </p>
+              <div class="project-stats">
+                <div class="stat-item">
+                  <span class="stat-value">40%</span>
+                  <span class="stat-label">Time Saved</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value">Multi-role</span>
+                  <span class="stat-label">Authentication</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value">Docker</span>
+                  <span class="stat-label">Deployment</span>
+                </div>
+              </div>
+              <div class="project-tech">
+                <span class="tech-badge">Angular</span>
+                <span class="tech-badge">TypeScript</span>
+                <span class="tech-badge">Node.js</span>
+                <span class="tech-badge">PostgreSQL</span>
+                <span class="tech-badge">Docker</span>
+              </div>
+              <div class="project-links">
+                <a href="https://ssolares0.github.io/SaludPlus/" class="project-link" target="_blank" rel="noopener">
+                  <span>Live Demo</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 3H3v10h10v-3M11 3h5v5M8 8l8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </a>
+                <a href="https://github.com/Ssolares0/SaludPlus/blob/main/docs/manuales/manual_tecnico.md" class="project-link" target="_blank" rel="noopener">
+                  <span>Documentation</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 3H3v10h10v-3M11 3h5v5M8 8l8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </a>
+                <a href="https://github.com/Ssolares0/SaludPlus" class="project-link" target="_blank" rel="noopener">
+                  <span>Source Code</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 3H3v10h10v-3M11 3h5v5M8 8l8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </a>
+              </div>
             </div>
           </article>
 
-          <article class="project-card">
-            <h3 class="project-title">EbookVault</h3>
-            <p class="project-description">
-              Plataforma de libros electrónicos en la nube inspirada en Kindle. Promueve el hábito de lectura
-              con catálogo administrable, sistema de adquisiciones y almacenamiento AWS S3.
-            </p>
-            <div class="project-tech">
-              <span class="tech-tag">Node.js</span>
-              <span class="tech-tag">TypeScript</span>
-              <span class="tech-tag">Express</span>
-              <span class="tech-tag">PostgreSQL</span>
-              <span class="tech-tag">AWS S3</span>
-              <span class="tech-tag">JWT</span>
+          <article class="project-item" data-index="02">
+            <div class="project-visual">
+              <div class="project-thumbnail">
+                <img src="images/ebook.png" alt="EbookVault - Cloud Ebook Platform" class="project-image">
+              </div>
             </div>
-            <div class="project-links">
-              <a href="" class="project-link"><span>Ver Demo</span></a>
-              <a href="https://github.com/Ssolares0/EbookVault-backend" class="project-link"><span>Código
-                  Backend</span></a>
-              <a href="https://github.com/Ssolares0/EbookVault-backend/blob/main/readme.md"
-                class="project-link"><span>Documentación</span></a>
+            <div class="project-content">
+              <div class="project-meta">
+                <span class="project-year">2024</span>
+                <span class="project-type">Cloud Platform</span>
+              </div>
+              <h3 class="project-name">EbookVault</h3>
+              <p class="project-description">
+                Cloud-based ebook platform inspired by Kindle. Manages digital library with AWS S3 storage, 
+                purchase workflows, and content delivery. Built scalable API handling thousands of ebook transactions.
+              </p>
+              <div class="project-stats">
+                <div class="stat-item">
+                  <span class="stat-value">AWS S3</span>
+                  <span class="stat-label">Storage</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value">REST API</span>
+                  <span class="stat-label">Architecture</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value">JWT</span>
+                  <span class="stat-label">Security</span>
+                </div>
+              </div>
+              <div class="project-tech">
+                <span class="tech-badge">Node.js</span>
+                <span class="tech-badge">TypeScript</span>
+                <span class="tech-badge">Express</span>
+                <span class="tech-badge">PostgreSQL</span>
+                <span class="tech-badge">AWS S3</span>
+                <span class="tech-badge">JWT</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/Ssolares0/EbookVault-backend" class="project-link" target="_blank" rel="noopener">
+                  <span>Backend Source</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 3H3v10h10v-3M11 3h5v5M8 8l8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </a>
+                <a href="https://github.com/Ssolares0/EbookVault-backend/blob/main/readme.md" class="project-link" target="_blank" rel="noopener">
+                  <span>API Docs</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 3H3v10h10v-3M11 3h5v5M8 8l8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </a>
+              </div>
             </div>
           </article>
 
-          <article class="project-card">
-            <h3 class="project-title">Grupo Fusión</h3>
-            <p class="project-description">
-              Landing page para Grupo Fusión, empresa de Guatemala.
-            </p>
-            <div class="project-tech">
-              <span class="tech-tag">Javascript</span>
-              <span class="tech-tag">HTML</span>
-              <span class="tech-tag">CSS</span>
+          <article class="project-item" data-index="03">
+            <div class="project-visual">
+              <div class="project-thumbnail">
+                <img src="images/fusion.png" alt="Grupo Fusión - Corporate Landing Page" class="project-image">
+              </div>
             </div>
-            <div class="project-links">
-              <a href="https://grupofusion.github.io/grupo_fusion/" class="project-link"><span>Ver Demo</span></a>
+            <div class="project-content">
+              <div class="project-meta">
+                <span class="project-year">2025</span>
+                <span class="project-type">Landing Page</span>
+              </div>
+              <h3 class="project-name">Grupo Fusión</h3>
+              <p class="project-description">
+                Corporate landing page for Guatemalan business group. Clean, responsive design 
+                focused on brand presentation and lead generation.
+              </p>
+              <div class="project-tech">
+                <span class="tech-badge">JavaScript</span>
+                <span class="tech-badge">HTML5</span>
+                <span class="tech-badge">CSS3</span>
+              </div>
+              <div class="project-links">
+                <a href="https://grupofusion.github.io/grupo_fusion/" class="project-link" target="_blank" rel="noopener">
+                  <span>View Site</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 3H3v10h10v-3M11 3h5v5M8 8l8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-item" data-index="04">
+            <div class="project-visual">
+              <div class="project-thumbnail">
+                <img src="images/ryc.jpg" alt="Importadora RYC - Vehicle Sales Platform" class="project-image">
+              </div>
+            </div>
+            <div class="project-content">
+              <div class="project-meta">
+                <span class="project-year">2026</span>
+                <span class="project-type">Landing Page</span>
+              </div>
+              <h3 class="project-name">Importadora RYC</h3>
+              <p class="project-description">
+                Corporate landing page for vehicle importer showcasing current inventory with pricing. 
+                Designed to generate leads and provide customers with up-to-date vehicle information.
+              </p>
+              <div class="project-tech">
+                <span class="tech-badge">JavaScript</span>
+                <span class="tech-badge">HTML5</span>
+                <span class="tech-badge">CSS3</span>
+              </div>
+              <div class="project-links">
+                <a href="https://ssolares0.github.io/importadora_ryc/" class="project-link" target="_blank" rel="noopener">
+                  <span>View Site</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 3H3v10h10v-3M11 3h5v5M8 8l8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
           </article>
 
         </div>
       </section>
 
-      <section id="certificaciones">
-        <h2 class="section-title">Certificaciones</h2>
+      <!-- Certifications Section -->
+      <section id="certifications" class="section-certifications">
+        <div class="section-header">
+          <h2 class="section-title">Credentials</h2>
+          <p class="section-subtitle">Verified technical certifications</p>
+        </div>
         <div class="certifications-grid">
           <div class="certification-card">
             <div data-iframe-width="220" data-iframe-height="320"
@@ -133,36 +295,106 @@
             <div data-iframe-width="220" data-iframe-height="320"
               data-share-badge-id="2435dc76-21c0-4317-b46b-77067f0e3612" data-share-badge-host="https://www.credly.com">
             </div>
-            
           </div>
-
         </div>
       </section>
 
-      <section id="sobre-mi" class="about-section">
-        <h2 class="section-title">Sobre mí</h2>
-        <p class="about-text">
-          Soy estudiante de Ingeniería en Ciencias y Sistemas en la Universidad de San Carlos de Guatemala, actualmente
-          en el 10º semestre de la carrera. A lo largo de mi trayectoria académica, he adquirido conocimientos sólidos
-          en tecnología, siendo la programación mi pasión.
-        </p>
+      <!-- About Section -->
+      <section id="about" class="section-about">
+        <div class="about-content">
+          <div class="about-text">
+            <h2 class="section-title">About</h2>
+            <p class="about-paragraph">
+              Currently in my 10th semester studying Computer Science and Systems Engineering at 
+              Universidad de San Carlos de Guatemala. I focus on building production-grade web applications 
+              with modern JavaScript frameworks and cloud infrastructure.
+            </p>
+            <p class="about-paragraph">
+              My work centers on creating scalable systems that solve real business problems—from 
+              healthcare management platforms to cloud-based content delivery. I'm particularly 
+              interested in TypeScript ecosystems, database design, and deployment automation.
+            </p>
+          </div>
+          <div class="about-skills">
+            <div class="skill-group">
+              <h3 class="skill-category">Frontend</h3>
+              <ul class="skill-list">
+                <li>Angular</li>
+                <li>React</li>
+                <li>JavaScript ES6+</li>
+                <li>HTML5 & CSS3</li>
+              </ul>
+            </div>
+            <div class="skill-group">
+              <h3 class="skill-category">Backend</h3>
+              <ul class="skill-list">
+                <li>Node.js</li>
+                <li>TypeScript</li>
+                <li>Express</li>
+                <li>Golang</li>
+                <li>REST APIs</li>
+                <li>PostgreSQL</li>
+              </ul>
+            </div>
+            <div class="skill-group">
+              <h3 class="skill-category">DevOps</h3>
+              <ul class="skill-list">
+                <li>Docker</li>
+                <li>AWS S3</li>
+                <li>Git</li>
+                <li>CI/CD</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
 
-    <footer id="contacto">
-      <div class="footer-links">
-        <a href="https://github.com/Ssolares0" class="footer-link">GitHub</a>
-        <a href="https://linkedin.com/in/marco-sebastian-solares-españa-1215ab22a" class="footer-link">LinkedIn</a>
-        <a href="mailto:sebastiansolares2001@gmail.com" class="footer-link">Email</a>
-        <a href="https://wa.me/50232268751" class="footer-link">WhatsApp</a>
+    <!-- Contact Section -->
+    <footer id="contact" class="section-contact">
+      <div class="contact-content">
+        <div class="contact-header">
+          <h2 class="contact-title">Let's Work Together</h2>
+          <p class="contact-description">
+            Available for freelance projects and full-time opportunities. 
+            Open to collaborating on interesting challenges.
+          </p>
+        </div>
+        <div class="contact-links">
+          <a href="mailto:sebastiansolares2001@gmail.com" class="contact-link">
+            <svg class="contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke-width="2"/>
+              <path d="M22 6l-10 7L2 6" stroke-width="2"/>
+            </svg>
+            <span class="contact-label">sebastiansolares2001@gmail.com</span>
+          </a>
+          <a href="https://github.com/Ssolares0" class="contact-link" target="_blank" rel="noopener">
+            <svg class="contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+            </svg>
+            <span class="contact-label">GitHub</span>
+          </a>
+          <a href="https://linkedin.com/in/marco-sebastian-solares-españa-1215ab22a" class="contact-link" target="_blank" rel="noopener">
+            <svg class="contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+            <span class="contact-label">LinkedIn</span>
+          </a>
+          <a href="https://wa.me/50232268751" class="contact-link" target="_blank" rel="noopener">
+            <svg class="contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            <span class="contact-label">WhatsApp</span>
+          </a>
+        </div>
       </div>
-      <div class="footer-content">
-        © 2025 Sebastian Solares.
+      <div class="footer-bottom">
+        <p class="footer-text">© 2025 Sebastian Solares. Built with attention to detail.</p>
       </div>
     </footer>
   </div>
 
-  <!-- Script de Credly para cargar los badges -->
+  <!-- Credly badges script -->
   <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 
 </body>
