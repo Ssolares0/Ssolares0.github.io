@@ -43,6 +43,26 @@ function initParticleCanvas() {
   const ctx = canvas.getContext('2d');
   let particles = [];
   let animationId;
+  let isPaused = false;
+  
+  // Detect device type and capabilities
+  const isMobile = window.innerWidth <= 768;
+  const isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+  const isLowPerformance = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
+  
+  // Adjust settings based on device
+  const config = {
+    gridSize: isMobile ? 120 : isTablet ? 100 : 80,
+    connectionDistance: isMobile ? 100 : 120,
+    maxConnections: isMobile ? 2 : isTablet ? 3 : 5,
+    particleSize: isMobile ? 1.5 : 2,
+    enableConnections: !isMobile, // Disable connections on mobile for better performance
+    enableMouseInteraction: !isMobile,
+    fps: isMobile || isLowPerformance ? 30 : 60
+  };
+  
+  const fpsInterval = 1000 / config.fps;
+  let lastFrameTime = Date.now();
   
   function resize() {
     canvas.width = window.innerWidth;
@@ -56,10 +76,11 @@ function initParticleCanvas() {
       this.y = y;
       this.baseX = x;
       this.baseY = y;
-      this.size = Math.random() * 2 + 0.5;
-      this.speedX = Math.random() * 0.5 - 0.25;
-      this.speedY = Math.random() * 0.5 - 0.25;
+      this.size = Math.random() * config.particleSize + 0.5;
+      this.speedX = (Math.random() * 0.5 - 0.25) * (isMobile ? 0.5 : 1);
+      this.speedY = (Math.random() * 0.5 - 0.25) * (isMobile ? 0.5 : 1);
       this.opacity = Math.random() * 0.5 + 0.2;
+      this.connections = 0;
     }
     
     update(mouse) {
@@ -73,8 +94,8 @@ function initParticleCanvas() {
       this.x += dx * 0.01;
       this.y += dy * 0.01;
       
-      // Mouse interaction
-      if (mouse.x !== null && mouse.y !== null) {
+      // Mouse interaction (only on desktop)
+      if (config.enableMouseInteraction && mouse.x !== null && mouse.y !== null) {
         const distX = mouse.x - this.x;
         const distY = mouse.y - this.y;
         const distance = Math.sqrt(distX * distX + distY * distY);
@@ -86,6 +107,8 @@ function initParticleCanvas() {
           this.y -= Math.sin(angle) * force * 3;
         }
       }
+      
+      this.connections = 0;
     }
     
     draw() {
@@ -98,14 +121,13 @@ function initParticleCanvas() {
   
   function initParticles() {
     particles = [];
-    const gridSize = 80;
-    const cols = Math.ceil(canvas.width / gridSize);
-    const rows = Math.ceil(canvas.height / gridSize);
+    const cols = Math.ceil(canvas.width / config.gridSize);
+    const rows = Math.ceil(canvas.height / config.gridSize);
     
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
-        const x = i * gridSize + Math.random() * 20 - 10;
-        const y = j * gridSize + Math.random() * 20 - 10;
+        const x = i * config.gridSize + Math.random() * 20 - 10;
+        const y = j * config.gridSize + Math.random() * 20 - 10;
         particles.push(new Particle(x, y));
       }
     }
@@ -116,34 +138,62 @@ function initParticleCanvas() {
     y: null
   };
   
-  canvas.addEventListener('mousemove', (e) => {
-    mouse.x = e.x;
-    mouse.y = e.y;
-  });
-  
-  canvas.addEventListener('mouseleave', () => {
-    mouse.x = null;
-    mouse.y = null;
-  });
+  if (config.enableMouseInteraction) {
+    canvas.addEventListener('mousemove', (e) => {
+      mouse.x = e.x;
+      mouse.y = e.y;
+    });
+    
+    canvas.addEventListener('mouseleave', () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+  }
   
   function animate() {
+    // FPS throttling
+    const now = Date.now();
+    const elapsed = now - lastFrameTime;
+    
+    if (elapsed < fpsInterval) {
+      animationId = requestAnimationFrame(animate);
+      return;
+    }
+    
+    lastFrameTime = now - (elapsed % fpsInterval);
+    
+    // Skip animation if paused (page hidden)
+    if (isPaused) {
+      animationId = requestAnimationFrame(animate);
+      return;
+    }
+    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Draw connections
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+    // Draw connections (only on desktop)
+    if (config.enableConnections) {
+      for (let i = 0; i < particles.length; i++) {
+        if (particles[i].connections >= config.maxConnections) continue;
         
-        if (distance < 120) {
-          const opacity = (120 - distance) / 120 * 0.15;
-          ctx.strokeStyle = `rgba(20, 184, 166, ${opacity})`;
-          ctx.lineWidth = 0.5;
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.stroke();
+        for (let j = i + 1; j < particles.length; j++) {
+          if (particles[j].connections >= config.maxConnections) continue;
+          
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < config.connectionDistance) {
+            const opacity = (config.connectionDistance - distance) / config.connectionDistance * 0.15;
+            ctx.strokeStyle = `rgba(20, 184, 166, ${opacity})`;
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+            
+            particles[i].connections++;
+            particles[j].connections++;
+          }
         }
       }
     }
@@ -160,7 +210,17 @@ function initParticleCanvas() {
   resize();
   animate();
   
-  window.addEventListener('resize', resize);
+  // Debounced resize handler
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(resize, 250);
+  });
+  
+  // Pause animations when tab is hidden (battery saving)
+  document.addEventListener('visibilitychange', () => {
+    isPaused = document.hidden;
+  });
   
   // Cleanup on page unload
   window.addEventListener('beforeunload', () => {
@@ -278,6 +338,7 @@ function initProjectCards() {
 function initNavHighlight() {
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+  let ticking = false;
   
   function highlightNav() {
     let current = '';
@@ -298,9 +359,18 @@ function initNavHighlight() {
         link.classList.add('active');
       }
     });
+    
+    ticking = false;
   }
   
-  window.addEventListener('scroll', highlightNav);
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(highlightNav);
+      ticking = true;
+    }
+  }
+  
+  window.addEventListener('scroll', onScroll, { passive: true });
   highlightNav();
 }
 
@@ -309,15 +379,28 @@ function initHeroParallax() {
   const hero = document.querySelector('.hero');
   if (!hero) return;
   
-  window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY;
-    const parallaxSpeed = 0.5;
-    
+  let ticking = false;
+  let scrolled = 0;
+  
+  function updateParallax() {
     if (scrolled < window.innerHeight) {
+      const parallaxSpeed = 0.5;
       hero.style.transform = `translateY(${scrolled * parallaxSpeed}px)`;
       hero.style.opacity = 1 - (scrolled / window.innerHeight) * 0.5;
     }
-  });
+    ticking = false;
+  }
+  
+  function onScroll() {
+    scrolled = window.scrollY;
+    
+    if (!ticking) {
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }
+  
+  window.addEventListener('scroll', onScroll, { passive: true });
 }
 
 // Stats counter animation
@@ -372,7 +455,239 @@ function initKeyboardNav() {
         contactSection.scrollIntoView({ behavior: 'smooth' });
       }
     }
+    
+    // Press 'Escape' to close mobile menu
+    if (e.key === 'Escape') {
+      closeMobileMenu();
+    }
   });
+}
+
+// Mobile hamburger menu
+function initMobileMenu() {
+  const hamburger = document.querySelector('.hamburger');
+  const navLinks = document.querySelector('.nav-links');
+  const navLinkItems = document.querySelectorAll('.nav-link');
+  
+  if (!hamburger || !navLinks) return;
+  
+  // Toggle menu
+  hamburger.addEventListener('click', () => {
+    const isActive = hamburger.classList.contains('active');
+    
+    if (isActive) {
+      closeMobileMenu();
+    } else {
+      openMobileMenu();
+    }
+  });
+  
+  // Close menu when clicking a link
+  navLinkItems.forEach(link => {
+    link.addEventListener('click', () => {
+      closeMobileMenu();
+    });
+  });
+  
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+      closeMobileMenu();
+    }
+  });
+  
+  function openMobileMenu() {
+    hamburger.classList.add('active');
+    navLinks.classList.add('active');
+    hamburger.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+  }
+  
+  function closeMobileMenu() {
+    hamburger.classList.remove('active');
+    navLinks.classList.remove('active');
+    hamburger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = ''; // Restore scrolling
+  }
+  
+  // Make closeMobileMenu available globally for keyboard navigation
+  window.closeMobileMenu = closeMobileMenu;
+}
+
+// Lazy loading for images
+function initLazyLoading() {
+  const lazyImages = document.querySelectorAll('.lazy-image');
+  
+  if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          const thumbnail = img.closest('.project-thumbnail');
+          
+          // Image load handler
+          img.addEventListener('load', () => {
+            img.classList.add('loaded');
+            if (thumbnail) {
+              thumbnail.classList.add('loaded');
+            }
+          });
+          
+          // If image already cached/loaded
+          if (img.complete) {
+            img.classList.add('loaded');
+            if (thumbnail) {
+              thumbnail.classList.add('loaded');
+            }
+          }
+          
+          observer.unobserve(img);
+        }
+      });
+    }, {
+      rootMargin: '50px 0px', // Start loading 50px before entering viewport
+      threshold: 0.01
+    });
+    
+    lazyImages.forEach(img => imageObserver.observe(img));
+  } else {
+    // Fallback for browsers without IntersectionObserver
+    lazyImages.forEach(img => {
+      img.classList.add('loaded');
+      const thumbnail = img.closest('.project-thumbnail');
+      if (thumbnail) {
+        thumbnail.classList.add('loaded');
+      }
+    });
+  }
+}
+
+// Scroll progress indicator
+function initScrollProgress() {
+  const progressBar = document.querySelector('.scroll-progress-bar');
+  if (!progressBar) return;
+  
+  let ticking = false;
+  
+  function updateProgress() {
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollTop = window.scrollY;
+    
+    // Calculate scroll percentage
+    const scrollableHeight = documentHeight - windowHeight;
+    const scrollPercentage = (scrollTop / scrollableHeight) * 100;
+    
+    // Update progress bar width
+    progressBar.style.width = `${Math.min(scrollPercentage, 100)}%`;
+    
+    ticking = false;
+  }
+  
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(updateProgress);
+      ticking = true;
+    }
+  }
+  
+  window.addEventListener('scroll', onScroll, { passive: true });
+  updateProgress(); // Initial call
+}
+
+// Contact form handling
+function initContactForm() {
+  const form = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const formStatus = document.getElementById('formStatus');
+  
+  if (!form) return;
+  
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Disable submit button
+    submitBtn.disabled = true;
+    submitBtn.querySelector('.submit-text').textContent = 'Sending...';
+    
+    // Clear previous status
+    formStatus.className = 'form-status';
+    formStatus.textContent = '';
+    
+    // Get form data
+    const formData = new FormData(form);
+    
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        // Success
+        formStatus.className = 'form-status success';
+        formStatus.textContent = '✓ Message sent successfully! I\'ll get back to you soon.';
+        form.reset();
+        
+        // Re-enable button after delay
+        setTimeout(() => {
+          submitBtn.disabled = false;
+          submitBtn.querySelector('.submit-text').textContent = 'Send Message';
+        }, 2000);
+      } else {
+        throw new Error('Form submission failed');
+      }
+    } catch (error) {
+      // Error
+      formStatus.className = 'form-status error';
+      formStatus.textContent = '✗ Something went wrong. Please try again or email me directly.';
+      
+      submitBtn.disabled = false;
+      submitBtn.querySelector('.submit-text').textContent = 'Send Message';
+    }
+  });
+  
+  // Form validation feedback
+  const inputs = form.querySelectorAll('.form-input, .form-textarea');
+  inputs.forEach(input => {
+    input.addEventListener('invalid', (e) => {
+      e.preventDefault();
+      input.style.borderColor = '#ef4444';
+    });
+    
+    input.addEventListener('input', () => {
+      if (input.validity.valid) {
+        input.style.borderColor = '';
+      }
+    });
+  });
+}
+
+// Skills progress bars animation
+function initSkillBars() {
+  const skillProgress = document.querySelectorAll('.skill-progress');
+  
+  if (skillProgress.length === 0) return;
+  
+  const observerOptions = {
+    threshold: 0.5,
+    rootMargin: '0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+        const progress = entry.target.getAttribute('data-progress');
+        entry.target.style.setProperty('--progress-width', `${progress}%`);
+        entry.target.classList.add('animated');
+      }
+    });
+  }, observerOptions);
+  
+  skillProgress.forEach(bar => observer.observe(bar));
 }
 
 // Performance: Reduce animations on low-end devices
@@ -395,6 +710,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initTechBadges();
   initProjectCards();
   initKeyboardNav();
+  initMobileMenu();
+  initLazyLoading();
+  initContactForm();
+  initScrollProgress();
   
   if (canAnimate) {
     initCursorGlow();
@@ -403,19 +722,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initCodeTypewriter();
     initHeroParallax();
     initStatsCounter();
+    initSkillBars();
   }
   
   // Log for debugging
   console.log('%c Portfolio loaded successfully! ', 'background: #14b8a6; color: #0a0e14; padding: 4px 8px; border-radius: 4px;');
   console.log('%c Built by Sebastian Solares ', 'color: #14b8a6;');
-});
-
-// Handle page visibility changes
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    // Pause expensive animations when tab is hidden
-    console.log('Tab hidden - pausing animations');
-  } else {
-    console.log('Tab visible - resuming animations');
-  }
 });
