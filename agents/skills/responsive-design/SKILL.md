@@ -185,6 +185,7 @@ p {
 }
 ```
 
+{% raw %}
 ```tsx
 // Utility function for fluid values
 function fluidValue(
@@ -208,6 +209,7 @@ const fluidTypeScale = {
   "2xl": fluidValue(2, 3),
 };
 ```
+{% endraw %}
 
 ### Pattern 3: CSS Grid Responsive Layout
 
@@ -271,6 +273,7 @@ const fluidTypeScale = {
 }
 ```
 
+{% raw %}
 ```tsx
 // Responsive grid component
 function ResponsiveGrid({ children, minItemWidth = "250px", gap = "1.5rem" }) {
@@ -298,6 +301,7 @@ function ProductGrid({ products }) {
   );
 }
 ```
+{% endraw %}
 
 ### Pattern 4: Responsive Navigation
 
@@ -353,6 +357,7 @@ function ResponsiveNav({ items }) {
 
 ### Pattern 5: Responsive Images
 
+{% raw %}
 ```tsx
 // Responsive image with art direction
 function ResponsiveHero() {
@@ -401,6 +406,7 @@ function ProductImage({ product }) {
   );
 }
 ```
+{% endraw %}
 
 ### Pattern 6: Responsive Tables
 
