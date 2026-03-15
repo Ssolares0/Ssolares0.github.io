@@ -1,0 +1,11 @@
+{
+  "github.copilot.chat.agent.thinkingTool": true,
+  "chat.agent.enabled": true,
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "chat.models.enabled": true,
+  "github.copilot.chat.experimental.generateTests.codeLensTitle": "Generate Tests with Claude Sonnet",
+  "github.copilot.selectedCompletionModel": "claude-sonnet-4-5",
+  "github.copilot.chat.experimental.models": [
+    "claude-sonnet-4-5"
+  ]
+}
